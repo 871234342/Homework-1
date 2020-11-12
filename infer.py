@@ -8,7 +8,7 @@ from torch.utils.data import DataLoader
 from utils import DataNoLabel, test_model
 
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 use_cuda = torch.cuda.is_available()
 
 # Get labels
