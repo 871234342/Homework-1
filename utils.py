@@ -7,6 +7,9 @@ from skimage import io
 from torch.utils.data import Dataset
 import time
 
+# This file contains two classes for data set (training and testing each)
+# and two function for training and inference
+
 
 class DataWithLabel(Dataset):
 
