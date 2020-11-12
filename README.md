@@ -12,9 +12,9 @@ In order to reproduce my training and inferrinf process, please make sure the pa
 
 ### Reproduce Submission
 To reproduce my submission without training, do the following:
-1. [installation]()
-2. [Data Preparation]()
-3. [Inference]()
+1. [Installation](#Installlation)
+2. [Data Preparation](#Data-Preparation)
+3. [Inference](#Inference)
 
 
 ### Installation
