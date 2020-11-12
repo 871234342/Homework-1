@@ -10,16 +10,20 @@ import numpy as np
 from torch.utils.data import DataLoader
 from utils import DataWithLabel, DataNoLabel, train_model, test_model
 
+# This program trains a Resnet152 model to classifiy images with
+# 196 different labels. After training, weights.pth and log.txt 
+# will be created to presrve the trained model and accuracy during
+# training.
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 use_cuda = torch.cuda.is_available()
 
 # Hyper-parameters
 weight_decay = 0.001
 batch_size = 12
 total_epoch = 25
-start_epoch = 0
-skip_train = False
+start_epoch = 0     # To resume training from a certain point
 if start_epoch  == 0:
     weight_load_path = None
 else:
@@ -35,6 +39,7 @@ with open("log.txt", "w") as file:
 
 # Data preprocess
 all_labels = pd.read_csv('training_labels.csv')
+# List of labels to convert strings to intergers
 names = pd.read_csv('labels.csv')
 names = np.array(names.iloc[:,0])
 names = names.tolist()
@@ -44,6 +49,7 @@ for idx, name in enumerate(all_labels.iloc[:,1]):
     all_labels.iloc[idx,1] = names.index(name)
     categories[names.index(name)].append(idx)
 
+# Separate training data and validation data
 val_num = 5     #number of validation images per class
 train_idx = []
 val_idx = []
@@ -86,14 +92,11 @@ train_set = DataWithLabel(data_csv=all_labels, root_dir='training_data/',
                     desire_idx=train_idx, transform=train_transform)
 val_set = DataWithLabel(data_csv=all_labels, root_dir='training_data/',
                     desire_idx=val_idx, transform=val_transform)
-infer_set = DataNoLabel(root_dir='testing_data/', transform=val_transform)
-
 train_loader = DataLoader(train_set, batch_size=batch_size,
                           num_workers=2, shuffle=True)
 val_loader = DataLoader(val_set, batch_size=batch_size,
                         num_workers=2, shuffle=True)
 loaders={'train': train_loader, 'val': val_loader}
-infer_loader = DataLoader(infer_set, num_workers=2, shuffle=False)
 
 
 # Construct model
@@ -112,10 +115,8 @@ net = net.to(device)
 
 # Criterion, optimizer, scheduler
 criterion = nn.CrossEntropyLoss()
-optimizer = optim.Adam(net.parameters(), weight_decay=weight_decay)
-optimizer2 = optim.SGD(net.parameters(), lr = 0.01, weight_decay=weight_decay)
-scheduler = lr_scheduler.StepLR(optimizer, 10, 0.1)
-scheduler2 = lr_scheduler.ReduceLROnPlateau(optimizer,
+optimizer = optim.SGD(net.parameters(), lr = 0.01, weight_decay=weight_decay)
+scheduler = lr_scheduler.ReduceLROnPlateau(optimizer,
                                             "max", patience=3, verbose=True)
 
 # Load checkpoint, if any
@@ -127,17 +128,13 @@ if weight_load_path:
 
 
 #Train model
-if not skip_train:
-    print("Start training...")
-    net= train_model(
-        net, criterion, optimizer2, scheduler2, device, loaders,
-        total_epoch - start_epoch, len(train_set), len(val_set))
-    PATH = 'weights.pth'
-    torch.save(net.state_dict(), PATH)
+
+print("Start training...")
+net= train_model(
+    net, criterion, optimizer, scheduler, device, loaders,
+    total_epoch - start_epoch, len(train_set), len(val_set))
+PATH = 'weights.pth'
+torch.save(net.state_dict(), PATH)
 
 
-# Inference
-print("Inferring ...")
-net.load_state_dict(torch.load('weights.pth'))
-test_model(net, infer_loader, names, device, 'testing_labels.csv')
 
