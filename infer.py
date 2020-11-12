@@ -7,6 +7,10 @@ import numpy as np
 from torch.utils.data import DataLoader
 from utils import DataNoLabel, test_model
 
+# This program uses Resnet152 with weights loaded from weights.pth
+# to predict label of a given image. testing_labels.csv will be
+# created after inference completes.
+
 
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 use_cuda = torch.cuda.is_available()
@@ -30,7 +34,6 @@ val_transform = transforms.Compose([
 ])
 
 infer_set = DataNoLabel(root_dir='testing_data/', transform=val_transform)
-
 infer_loader = DataLoader(infer_set, num_workers=2, shuffle=False)
 
 
