@@ -41,7 +41,7 @@ repo
   +- weights.pth   (needed for inference)
   |  ...
 ```
-Where training_data folder contains all the training images, and testing_data folder contains all the testing images. The training_labels.csv file should contain the file name and corresponding label of each image in training_data folder. Please check the file to see the expected format.
+Where training_data folder contains all the training images, and testing_data folder contains all the testing images. The training_labels.csv file should contain the file name and corresponding label of each image in training_data folder. Please check training_labels.csv to see the expected format.
 
 ### Training
 To train, simply run the train.py file. weights.pth file should be created beside train.py. The batch_size is set to be 12. Make it smaller if memory is not sufficent.
