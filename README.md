@@ -12,7 +12,7 @@ In order to reproduce my training and inferrinf process, please make sure the pa
 
 ### Reproduce Submission
 To reproduce my submission without training, do the following:
-1. [Installation](#Installlation)
+1. [Installation](#Installation)
 2. [Data Preparation](#Data-Preparation)
 3. [Inference](#Inference)
 
@@ -47,4 +47,4 @@ Where training_data folder contains all the training images, and testing_data fo
 To train, simply run the train.py file. weights.pth file should be created beside train.py. The batch_size is set to be 12. Make it smaller if memory is not sufficent.
 
 ### Inference
-for inference, please download the weights file [here](https://drive.google.com/file/d/1nQPV5yNpJn1VEM-VL7g_6Y6KT0REy0Cl/view?usp=sharing). Simply run infer.py and a csv file named testing_labels.csv containing images file names and their corresponding predictions will be created.
+for inference, please download the weights file [here](https://drive.google.com/file/d/1nQPV5yNpJn1VEM-VL7g_6Y6KT0REy0Cl/view?usp=sharing) and put it beside infer.py. Simply run infer.py and a csv file named testing_labels.csv containing images file names and their corresponding predictions will be created.
